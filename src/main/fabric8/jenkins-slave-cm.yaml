@@ -9,6 +9,7 @@ data:
   mavenwithnexus: |
     <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
       <inheritFrom></inheritFrom>
+      <cloud>openshift</cloud>
       <name>mavenwithnexus</name>
       <instanceCap>2147483647</instanceCap>
       <idleMinutes>0</idleMinutes>
@@ -34,10 +35,10 @@ data:
         </org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
       </containers>
       <envVars>
-        <envVar>
+        <org.csanchez.jenkins.plugins.kubernetes.PodEnvVar>
           <key>MAVEN_MIRROR_URL</key>
           <value>https://nexus/nexus/content/groups/public</value>
-        </envVar>
+        </org.csanchez.jenkins.plugins.kubernetes.PodEnvVar>
       </envVars>
       <annotations/>
       <imagePullSecrets/>
@@ -47,12 +48,13 @@ data:
     <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
       <inheritFrom>mavenwithnexus</inheritFrom>
       <name>mavenwithnexuspvc</name>
+      <label>mavenwithnexuspvc</label>
       <volumes>
-         <persistentVolumeClaim>
-            <mountPath>/root/.m2/repository</mountPath>
+         <org.csanchez.jenkins.plugins.kubernetes.volumes.PersistentVolumeClaim>
+            <mountPath>/home/jenkins/.m2/repository</mountPath>
             <claimName>maven-repo</claimName>
             <readOnly>false</readOnly>
-         </persistentVolumeClaim>
+         </org.csanchez.jenkins.plugins.kubernetes.volumes.PersistentVolumeClaim>
       </volumes>
     </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
 
