@@ -1,0 +1,58 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    role: jenkins-slave
+  name: jenkins-slave
+data:
+  mavenwithnexus: |
+    <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+      <inheritFrom></inheritFrom>
+      <name>mavenwithnexus</name>
+      <instanceCap>2147483647</instanceCap>
+      <idleMinutes>0</idleMinutes>
+      <label>mavenwithnexus</label>
+      <serviceAccount>jenkins</serviceAccount>
+      <nodeSelector></nodeSelector>
+      <volumes/>
+      <containers>
+        <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+          <name>jnlp</name>
+          <image>openshift/jenkins-slave-maven-centos7</image>
+          <privileged>false</privileged>
+          <alwaysPullImage>false</alwaysPullImage>
+          <workingDir>/tmp</workingDir>
+          <command></command>
+          <args>${computer.jnlpmac} ${computer.name}</args>
+          <ttyEnabled>false</ttyEnabled>
+          <resourceRequestCpu></resourceRequestCpu>
+          <resourceRequestMemory></resourceRequestMemory>
+          <resourceLimitCpu></resourceLimitCpu>
+          <resourceLimitMemory></resourceLimitMemory>
+          <envVars/>
+        </org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+      </containers>
+      <envVars>
+        <envVar>
+          <key>MAVEN_MIRROR_URL</key>
+          <value>https://nexus/nexus/content/groups/public</value>
+        </envVar>
+      </envVars>
+      <annotations/>
+      <imagePullSecrets/>
+      <nodeProperties/>
+    </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+  mavenwithnexuspvc: |
+    <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+      <inheritFrom>mavenwithnexus</inheritFrom>
+      <name>mavenwithnexuspvc</name>
+      <volumes>
+         <persistentVolumeClaim>
+            <mountPath>/root/.m2/repository</mountPath>
+            <claimName>maven-repo</claimName>
+            <readOnly>false</readOnly>
+         </persistentVolumeClaim>
+      </volumes>
+    </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+
