@@ -37,7 +37,7 @@ data:
       <envVars>
         <org.csanchez.jenkins.plugins.kubernetes.PodEnvVar>
           <key>MAVEN_MIRROR_URL</key>
-          <value>https://nexus/nexus/content/groups/public</value>
+          <value>http://nexus/nexus/content/groups/public</value>
         </org.csanchez.jenkins.plugins.kubernetes.PodEnvVar>
       </envVars>
       <annotations/>
